@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,6 +23,46 @@ public class TableSceneCreation {
 	public static Scene listScene(Stage stage, BorderPane root) {
 		Scene scene = new Scene(root, 1200, 800);
 
+		root.setCenter(drawTable());
+		
+		
+		HBox dashboardLeft = new HBox();
+		dashboardLeft.setPadding(new Insets(20));
+		dashboardLeft.setSpacing(40);
+		Button addCharacter = new Button("Add GameCharacter");
+		addCharacter.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				NewCharacterStage.draw();				
+			}
+		});
+		Button addList = new Button("Add list of GameCharacters");
+		Button sort = new Button("Order by Initiative");
+		Button save = new Button("Save list");
+		save.setDisable(true);
+		sort.setDisable(true);
+		addList.setDisable(true);
+		dashboardLeft.getChildren().addAll(addCharacter, addList, sort, save);
+		
+		Label roundCounter = new Label("Round x");
+		Button backButton = new Button("Back");
+		Button nextButton = new Button("Next turn");
+		HBox dashboardRight = new HBox(roundCounter, backButton, nextButton);
+		dashboardRight.setPadding(new Insets(20));
+		dashboardRight.setSpacing(40);
+		BorderPane bottomPane = new BorderPane();
+		bottomPane.setLeft(dashboardLeft);
+		bottomPane.setRight(dashboardRight);
+		
+		root.setBottom(bottomPane);
+		return scene;
+	}
+
+	/**
+	 * @return
+	 */
+	private static TableView<GameCharacter> drawTable() {
 		TableView<GameCharacter> table = new TableView<GameCharacter>();
 		TableColumn<GameCharacter, StringProperty> nameColumn = new TableColumn<GameCharacter, StringProperty>("Name");
 		TableColumn<GameCharacter, IntegerProperty> initiativeColumn = new TableColumn<GameCharacter, IntegerProperty>(
@@ -42,34 +84,7 @@ public class TableSceneCreation {
 		defencesColumn.getColumns().addAll(armourClassColumn, fortitudeColumn, reflexColumn, willpowerColumn);
 		hitpointsColumn.getColumns().addAll(currentHPColumn, temporaryHPColumn, maximumHPColumn);
 		table.getColumns().addAll(initiativeColumn, nameColumn, hitpointsColumn, defencesColumn, speedColumn, conditionsColumn);
-
-		root.setCenter(table);
-		
-		
-		HBox dashboardLeft = new HBox();
-		dashboardLeft.setPadding(new Insets(20));
-		dashboardLeft.setSpacing(40);
-		Button addCharacter = new Button("Add GameCharacter");
-		Button addList = new Button("Add list of GameCharacters");
-		Button sort = new Button("Order by Initiative");
-		Button save = new Button("Save list");
-		save.setDisable(true);
-		sort.setDisable(true);
-		addList.setDisable(true);
-		dashboardLeft.getChildren().addAll(addCharacter, addList, sort, save);
-		
-		Label roundCounter = new Label("Round x");
-		Button backButton = new Button("Back");
-		Button nextButton = new Button("Next turn");
-		HBox dashboardRight = new HBox(roundCounter, backButton, nextButton);
-		dashboardRight.setPadding(new Insets(20));
-		dashboardRight.setSpacing(40);
-		BorderPane bottomPane = new BorderPane();
-		bottomPane.setLeft(dashboardLeft);
-		bottomPane.setRight(dashboardRight);
-		
-		root.setBottom(bottomPane);
-		return scene;
+		return table;
 	}
 
 }
